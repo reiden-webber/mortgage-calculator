@@ -6,51 +6,77 @@ import BreakdownDisplay from '@/components/BreakdownDisplay';
 import { MortgageFormInputs, MortgageBreakdown } from '@/types';
 
 const initialFormValues: MortgageFormInputs = {
-  mortgageInsurance: '',
-  principalInterest: '',
-  propertyTaxes: '', // This field was in original type, but not used in new form. Keeping for type consistency.
-  homeInsurance: '',
-  hoaDues: '',
+  transactionType: 'Purchase',
+  purchasePrice: '500000', // Example value
+  downPaymentPercentage: '20%',
+  interestRate: '6.875', // Example interest rate
+  county: 'Los Angeles County',
+  hoaDues: '0', // Example HOA dues
+  propertyTaxPerMonth: '520', // Example property tax (approx 1.25% of 500k / 12)
+  homeownersInsurancePerMonth: '100', // Example home insurance
+
+  // The following fields might be part of a broader MortgageFormInputs type definition.
+  // Provide empty strings or default values if they are required by the type,
+  // even if not directly used by the 'Purchase' form's primary calculation path.
+  mortgageInsurance: '', 
+  principalInterest: '', // This will be calculated, not taken from form input directly for P&I calculation
+  propertyTaxes: '',     // Corresponds to propertyTaxPerMonth for input
+  homeInsurance: '',     // Corresponds to homeownersInsurancePerMonth for input
   creditScore: '',
-  propertyTaxPerMonth: '',
-  homeownersInsurancePerMonth: '',
   pmiPerMonth: '',
-  transactionType: '', // Add default value, e.g. '' or 'purchase'
-  purchasePrice: '',
-  downPaymentPercentage: '',
-  interestRate: '',
-  county: '',
-  propertyTaxAmount: '',
-  homeInsuranceAmount: '',
+  propertyTaxAmount: '', // Potentially redundant with propertyTaxPerMonth
+  homeInsuranceAmount: '', // Potentially redundant with homeownersInsurancePerMonth
 };
 
 export default function Home() {
   const [breakdownData, setBreakdownData] = useState<MortgageBreakdown | null>(null);
 
   const handleFormUpdate = (values: MortgageFormInputs) => {
-    const principalInterest = parseFloat(values.principalInterest) || 0;
-    const propertyTaxes = parseFloat(values.propertyTaxPerMonth) || 0;
-    const homeInsurance = parseFloat(values.homeownersInsurancePerMonth) || 0;
+    const purchasePrice = parseFloat(values.purchasePrice) || 0;
+    const downPaymentPercent = parseFloat(values.downPaymentPercentage.replace('%', '')) || 0;
+    const annualInterestRate = parseFloat(values.interestRate) || 0;
     
-    // Other values from the form, can be included if the breakdown logic expands
-    const mortgageInsurance = parseFloat(values.mortgageInsurance) || 0;
-    const hoaFees = parseFloat(values.hoaDues) || 0;
-    const pmi = parseFloat(values.pmiPerMonth) || 0;
+    const propertyTaxesMonthly = parseFloat(values.propertyTaxPerMonth) || 0;
+    const homeInsuranceMonthly = parseFloat(values.homeownersInsurancePerMonth) || 0;
+    const hoaFeesMonthly = parseFloat(values.hoaDues) || 0;
 
-    // For this example, totalMonthlyPayment is the sum of the three main components displayed
-    // More complex calculations would go here in a real scenario
-    const totalMonthlyPayment = principalInterest + propertyTaxes + homeInsurance;
+    const downPaymentAmount = purchasePrice * (downPaymentPercent / 100);
+    const loanAmount = purchasePrice - downPaymentAmount;
+
+    let calculatedPrincipalAndInterest = 0;
+    const loanTermYears = 30;
+    const numberOfPayments = loanTermYears * 12;
+
+    if (loanAmount > 0 && numberOfPayments > 0) {
+      if (annualInterestRate === 0) {
+        calculatedPrincipalAndInterest = loanAmount / numberOfPayments;
+      } else {
+        // P * (r(1+r)^n) / ((1+r)^n - 1)
+        // where P = principal, r = monthly interest rate, n = number of payments
+        const monthlyInterestRate = annualInterestRate / 100 / 12;
+        const factor = Math.pow(1 + monthlyInterestRate, numberOfPayments);
+        calculatedPrincipalAndInterest = 
+          loanAmount * (monthlyInterestRate * factor) / (factor - 1);
+      }
+    }
+    
+    // Ensure calculated P&I is a non-negative finite number
+    calculatedPrincipalAndInterest = Math.max(0, isFinite(calculatedPrincipalAndInterest) ? calculatedPrincipalAndInterest : 0);
+
+    // Total monthly payment for the pie chart (P&I + Tax + Insurance)
+    const totalMonthlyPaymentForPieChart = 
+      calculatedPrincipalAndInterest + 
+      propertyTaxesMonthly + 
+      homeInsuranceMonthly;
 
     const newBreakdown: MortgageBreakdown = {
-      totalMonthlyPayment,
+      totalMonthlyPayment: totalMonthlyPaymentForPieChart,
       breakdown: {
-        principalAndInterest: principalInterest,
-        propertyTaxes,
-        homeInsurance,
-        // Optionally include these if they are part of the model, even if not primary display
-        mortgageInsurance, 
-        hoaFees,
-        pmi,
+        principalAndInterest: calculatedPrincipalAndInterest,
+        propertyTaxes: propertyTaxesMonthly,
+        homeInsurance: homeInsuranceMonthly,
+        hoaFees: hoaFeesMonthly, // Store HOA fees, though not in pie chart sum
+        // mortgageInsurance and pmi can be added here if calculated/provided
       },
     };
     setBreakdownData(newBreakdown);

@@ -49,13 +49,13 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
     onSubmit(formData);
   };
 
-  const downPaymentOptions = ["40%", "20%", "10%", "5%", "3.5%"];
+  const downPaymentOptions = ["20%", "10%", "5%", "3.5%"];
   const countyOptions = [
-    "Los Angeles County", 
-    "Orange County", 
-    "San Bernadino County", 
-    "Riverside County", 
-    "San Diego County", 
+    "Los Angeles County",
+    "Orange County",
+    "San Bernadino County",
+    "Riverside County",
+    "San Diego County",
     "Ventura County"
   ];
 
