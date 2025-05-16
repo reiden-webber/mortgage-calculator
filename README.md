@@ -19,7 +19,7 @@ This project is a mortgage calculator application built with Next.js. It allows 
 
 ## Project Structure
 ```
-my-mortgage-calculator-app
+mortgage-calculator
 ├── src
 │   ├── app
 │   │   ├── layout.tsx

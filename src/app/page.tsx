@@ -9,12 +9,19 @@ const initialFormValues: MortgageFormInputs = {
   mortgageInsurance: '',
   principalInterest: '',
   propertyTaxes: '', // This field was in original type, but not used in new form. Keeping for type consistency.
-  homeInsurance: '', // ditto
-  hoaFees: '',
+  homeInsurance: '',
+  hoaDues: '',
   creditScore: '',
   propertyTaxPerMonth: '',
   homeownersInsurancePerMonth: '',
   pmiPerMonth: '',
+  transactionType: '', // Add default value, e.g. '' or 'purchase'
+  purchasePrice: '',
+  downPaymentPercentage: '',
+  interestRate: '',
+  county: '',
+  propertyTaxAmount: '',
+  homeInsuranceAmount: '',
 };
 
 export default function Home() {
@@ -27,7 +34,7 @@ export default function Home() {
     
     // Other values from the form, can be included if the breakdown logic expands
     const mortgageInsurance = parseFloat(values.mortgageInsurance) || 0;
-    const hoaFees = parseFloat(values.hoaFees) || 0;
+    const hoaFees = parseFloat(values.hoaDues) || 0;
     const pmi = parseFloat(values.pmiPerMonth) || 0;
 
     // For this example, totalMonthlyPayment is the sum of the three main components displayed
