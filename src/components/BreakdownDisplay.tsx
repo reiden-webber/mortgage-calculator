@@ -65,7 +65,7 @@ const BreakdownDisplay: React.FC<BreakdownDisplayProps> = ({ data }) => {
         <li className="flex justify-between items-center py-2">
           <div className="flex items-center">
             <span className="h-3 w-3 rounded-full bg-purple-500 mr-3"></span>
-            <span className="text-gray-700">Estimated Homeowner's insurance</span>
+            <span className="text-gray-700">Homeowner&#39;s insurance</span>
           </div>
           <span className="font-medium text-gray-800">{formatCurrency(breakdown.homeInsurance)}</span>
         </li>
