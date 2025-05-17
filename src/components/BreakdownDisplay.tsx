@@ -18,13 +18,21 @@ const BreakdownDisplay: React.FC<BreakdownDisplayProps> = ({ data }) => {
 
   const { totalMonthlyPayment, breakdown } = data;
 
+  const pieChartLabels = ['Principal & Interest', 'Property Tax', "Homeowner's Insurance"];
+  const pieChartValues = [
+    breakdown.principalAndInterest,
+    breakdown.propertyTaxes,
+    breakdown.homeInsurance,
+  ];
+
+  if (breakdown.hoaFees && breakdown.hoaFees > 0) {
+    pieChartLabels.push('HOA Dues');
+    pieChartValues.push(breakdown.hoaFees);
+  }
+
   const pieChartData = {
-    labels: ['Principal & Interest', 'Property Tax', "Homeowner's Insurance"],
-    values: [
-      breakdown.principalAndInterest,
-      breakdown.propertyTaxes,
-      breakdown.homeInsurance,
-    ],
+    labels: pieChartLabels,
+    values: pieChartValues,
   };
 
   // Helper to format currency
@@ -62,13 +70,22 @@ const BreakdownDisplay: React.FC<BreakdownDisplayProps> = ({ data }) => {
           </div>
           <span className="font-medium text-gray-800">{formatCurrency(breakdown.propertyTaxes)}</span>
         </li>
-        <li className="flex justify-between items-center py-2">
+        <li className={`flex justify-between items-center py-2 ${breakdown.hoaFees && breakdown.hoaFees > 0 ? 'border-b border-gray-200' : ''}`}>
           <div className="flex items-center">
             <span className="h-3 w-3 rounded-full bg-purple-500 mr-3"></span>
             <span className="text-gray-700">Homeowner&#39;s insurance</span>
           </div>
           <span className="font-medium text-gray-800">{formatCurrency(breakdown.homeInsurance)}</span>
         </li>
+        {breakdown.hoaFees && breakdown.hoaFees > 0 && (
+          <li className="flex justify-between items-center py-2">
+            <div className="flex items-center">
+              <span className="h-3 w-3 rounded-full bg-amber-500 mr-3"></span> {/* Ensure PieChart has this color */}
+              <span className="text-gray-700">HOA Dues</span>
+            </div>
+            <span className="font-medium text-gray-800">{formatCurrency(breakdown.hoaFees)}</span>
+          </li>
+        )}
       </ul>
     </div>
   );

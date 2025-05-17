@@ -15,6 +15,12 @@ const initialFormValues: MortgageFormInputs = {
   propertyTaxPerMonth: '520', // Example property tax (approx 1.25% of 500k / 12)
   homeownersInsurancePerMonth: '100', // Example home insurance
 
+  // Fields for refinance
+  loanBalance: '300000', // Example value
+  estimatedPropertyValue: '550000', // Example value
+  annualPropertyTaxEst: '6250', // Example value (approx 1.25% of 500k)
+  annualHomeInsuranceEst: '1200', // Example value
+
   // The following fields might be part of a broader MortgageFormInputs type definition.
   // Provide empty strings or default values if they are required by the type,
   // even if not directly used by the 'Purchase' form's primary calculation path.
@@ -32,20 +38,31 @@ export default function Home() {
   const [breakdownData, setBreakdownData] = useState<MortgageBreakdown | null>(null);
 
   const handleFormUpdate = (values: MortgageFormInputs) => {
-    const purchasePrice = parseFloat(values.purchasePrice) || 0;
-    const downPaymentPercent = parseFloat(values.downPaymentPercentage.replace('%', '')) || 0;
     const annualInterestRate = parseFloat(values.interestRate) || 0;
-    
-    const propertyTaxesMonthly = parseFloat(values.propertyTaxPerMonth) || 0;
-    const homeInsuranceMonthly = parseFloat(values.homeownersInsurancePerMonth) || 0;
     const hoaFeesMonthly = parseFloat(values.hoaDues) || 0;
-
-    const downPaymentAmount = purchasePrice * (downPaymentPercent / 100);
-    const loanAmount = purchasePrice - downPaymentAmount;
-
-    let calculatedPrincipalAndInterest = 0;
     const loanTermYears = 30;
     const numberOfPayments = loanTermYears * 12;
+
+    let loanAmount = 0;
+    let propertyTaxesMonthly = 0;
+    let homeInsuranceMonthly = 0;
+
+    if (values.transactionType === 'Purchase') {
+      const purchasePrice = parseFloat(values.purchasePrice) || 0;
+      const downPaymentPercent = parseFloat(values.downPaymentPercentage.replace('%', '')) || 0;
+      const downPaymentAmount = purchasePrice * (downPaymentPercent / 100);
+      loanAmount = purchasePrice - downPaymentAmount;
+      propertyTaxesMonthly = parseFloat(values.propertyTaxPerMonth) || 0;
+      homeInsuranceMonthly = parseFloat(values.homeownersInsurancePerMonth) || 0;
+    } else { // Refinance
+      loanAmount = parseFloat(values.loanBalance) || 0;
+      const annualPropertyTax = parseFloat(values.annualPropertyTaxEst) || 0;
+      const annualHomeInsurance = parseFloat(values.annualHomeInsuranceEst) || 0;
+      propertyTaxesMonthly = annualPropertyTax > 0 ? annualPropertyTax / 12 : 0;
+      homeInsuranceMonthly = annualHomeInsurance > 0 ? annualHomeInsurance / 12 : 0;
+    }
+    
+    let calculatedPrincipalAndInterest = 0;
 
     if (loanAmount > 0 && numberOfPayments > 0) {
       if (annualInterestRate === 0) {
@@ -63,11 +80,15 @@ export default function Home() {
     // Ensure calculated P&I is a non-negative finite number
     calculatedPrincipalAndInterest = Math.max(0, isFinite(calculatedPrincipalAndInterest) ? calculatedPrincipalAndInterest : 0);
 
-    // Total monthly payment for the pie chart (P&I + Tax + Insurance)
-    const totalMonthlyPaymentForPieChart = 
+    // Total monthly payment for the pie chart (P&I + Tax + Insurance + HOA)
+    let totalMonthlyPaymentForPieChart = 
       calculatedPrincipalAndInterest + 
       propertyTaxesMonthly + 
       homeInsuranceMonthly;
+
+    if (hoaFeesMonthly > 0) {
+      totalMonthlyPaymentForPieChart += hoaFeesMonthly;
+    }
 
     const newBreakdown: MortgageBreakdown = {
       totalMonthlyPayment: totalMonthlyPaymentForPieChart,
@@ -75,7 +96,7 @@ export default function Home() {
         principalAndInterest: calculatedPrincipalAndInterest,
         propertyTaxes: propertyTaxesMonthly,
         homeInsurance: homeInsuranceMonthly,
-        hoaFees: hoaFeesMonthly, // Store HOA fees, though not in pie chart sum
+        hoaFees: hoaFeesMonthly, 
         // mortgageInsurance and pmi can be added here if calculated/provided
       },
     };

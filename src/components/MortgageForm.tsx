@@ -23,6 +23,11 @@ const defaultInitialValues: MortgageFormInputs = {
   homeInsurance: '',
   creditScore: '',
   pmiPerMonth: '',
+  // Add new fields for refinance
+  loanBalance: '',
+  estimatedPropertyValue: '',
+  annualPropertyTaxEst: '',
+  annualHomeInsuranceEst: '',
 };
 
 const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) => {
@@ -192,16 +197,110 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
       )}
 
       {formData.transactionType === 'Refinance' && (
-        <div className="text-center py-4">
-          <p className="text-gray-500">Refinance options coming soon.</p>
-        </div>
+        <>
+          <div>
+            <label htmlFor="loanBalance" className="block text-sm font-medium text-gray-700 mb-1">
+              Loan Balance ($)
+            </label>
+            <input
+              type="number"
+              name="loanBalance"
+              id="loanBalance"
+              value={formData.loanBalance}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              placeholder="0"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="estimatedPropertyValue" className="block text-sm font-medium text-gray-700 mb-1">
+              Estimated Property Value ($)
+            </label>
+            <input
+              type="number"
+              name="estimatedPropertyValue"
+              id="estimatedPropertyValue"
+              value={formData.estimatedPropertyValue}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              placeholder="0"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="interestRate" className="block text-sm font-medium text-gray-700 mb-1">
+              Interest Rate (%)
+            </label>
+            <input
+              type="number"
+              name="interestRate"
+              id="interestRate"
+              value={formData.interestRate}
+              onChange={handleChange}
+              step="0.125"
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              // placeholder="7.25"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="county" className="block text-sm font-medium text-gray-700 mb-1">
+              County
+            </label>
+            <select
+              name="county"
+              id="county"
+              value={formData.county}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            >
+              {countyOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="annualPropertyTaxEst" className="block text-sm font-medium text-gray-700 mb-1">
+              Annual Property Tax Est. ($)
+            </label>
+            <input
+              type="number"
+              name="annualPropertyTaxEst"
+              id="annualPropertyTaxEst"
+              value={formData.annualPropertyTaxEst}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              placeholder="0"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="annualHomeInsuranceEst" className="block text-sm font-medium text-gray-700 mb-1">
+              Annual Home Insurance Est. ($)
+            </label>
+            <input
+              type="number"
+              name="annualHomeInsuranceEst"
+              id="annualHomeInsuranceEst"
+              value={formData.annualHomeInsuranceEst}
+              onChange={handleChange}
+              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+              placeholder="0"
+            />
+          </div>
+        </>
       )}
-      
-      <button type="submit" className="w-full bg-blue-600 text-white rounded p-3 font-semibold hover:bg-blue-700 transition duration-150">
+
+      <button
+        type="submit"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+      >
         Calculate
       </button>
     </form>
   );
 };
-
+      
 export default MortgageForm;

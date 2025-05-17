@@ -2,25 +2,41 @@ export type TransactionType = 'Purchase' | 'Refinance' | '';
 
 export interface MortgageFormInputs {
   transactionType: TransactionType;
+
+  // Purchase specific inputs
   purchasePrice: string;
   downPaymentPercentage: string; // e.g., "20", "10", "5", "3.5"
+  propertyTaxPerMonth: string; // Estimated monthly property tax for purchase
+  homeownersInsurancePerMonth: string; // Estimated monthly homeowners insurance for purchase
+
+  // Refinance specific inputs
+  loanBalance: string;
+  estimatedPropertyValue: string;
+  annualPropertyTaxEst: string; // Estimated annual property tax for refinance
+  annualHomeInsuranceEst: string; // Estimated annual home insurance for refinance
+
+  // Common inputs
   interestRate: string; // Annual interest rate
   county: string;
   hoaDues: string; // Monthly HOA Dues
-  propertyTaxAmount: string; // User-defined monthly property tax
-  homeInsuranceAmount: string; // User-defined monthly home insurance
 
-  // Retaining old fields for completeness, though they might not be directly used in the new form logic
-  // or could be removed if strictly adhering to the new field list.
-  // For now, keeping them to avoid breaking existing references if any, but they are not primary.
-  mortgageInsurance: string;
-  principalInterest: string; // This will be calculated, not a direct input anymore
-  propertyTaxes: string; // This is now covered by propertyTaxAmount
-  homeInsurance: string; // This is now covered by homeInsuranceAmount
+  // Other fields included in the form state (e.g., from defaultInitialValues),
+  // potentially for future features, internal calculations, or legacy reasons.
   creditScore: string;
-  propertyTaxPerMonth: string; // Covered by propertyTaxAmount
-  homeownersInsurancePerMonth: string; // Covered by homeInsuranceAmount
-  pmiPerMonth: string;
+  mortgageInsurance: string; // Placeholder for mortgage insurance details/type
+  pmiPerMonth: string;       // Placeholder for PMI amount per month
+
+  // These fields are in defaultInitialValues but their direct usage as form inputs might be limited
+  // or they might be legacy. Review for cleanup if not actively used.
+  propertyTaxAmount: string;     // Potentially another way to input property tax
+  homeInsuranceAmount: string;   // Potentially another way to input home insurance
+
+  // These fields are named like calculated outputs but are present as strings in defaultInitialValues.
+  // Their presence in form input state should be reviewed.
+  // Actual calculated numerical values are typically part of MortgageBreakdown.
+  principalInterest: string;
+  propertyTaxes: string;
+  homeInsurance: string;
 }
 
 export interface MortgageBreakdown {
