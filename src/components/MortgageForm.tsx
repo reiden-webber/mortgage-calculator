@@ -13,13 +13,9 @@ const defaultInitialValues: MortgageFormInputs = {
   interestRate: '',
   county: 'Los Angeles County',
   hoaDues: '',
-  propertyTaxPerMonth: '',
-  homeownersInsurancePerMonth: '',
   // Add new fields for refinance
   loanBalance: '',
   estimatedPropertyValue: '',
-  annualPropertyTaxEst: '',
-  annualHomeInsuranceEst: '',
 };
 
 const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) => {
@@ -120,7 +116,6 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
               onChange={handleChange}
               step="0.125"
               className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              // placeholder="7.25"
             />
           </div>
 
@@ -150,36 +145,6 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
               name="hoaDues"
               id="hoaDues"
               value={formData.hoaDues}
-              onChange={handleChange}
-              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              placeholder="0"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="propertyTaxPerMonth" className="block text-sm font-medium text-gray-700 mb-1">
-              Estimated Property Tax / month ($)
-            </label>
-            <input
-              type="number"
-              name="propertyTaxPerMonth"
-              id="propertyTaxPerMonth"
-              value={formData.propertyTaxPerMonth}
-              onChange={handleChange}
-              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              placeholder="0"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="homeownersInsurancePerMonth" className="block text-sm font-medium text-gray-700 mb-1">
-              Estimated Homeowners Insurance / month ($)
-            </label>
-            <input
-              type="number"
-              name="homeownersInsurancePerMonth"
-              id="homeownersInsurancePerMonth"
-              value={formData.homeownersInsurancePerMonth}
               onChange={handleChange}
               className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               placeholder="0"
@@ -232,7 +197,6 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
               onChange={handleChange}
               step="0.125"
               className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              // placeholder="7.25"
             />
           </div>
 
@@ -251,36 +215,6 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
                 <option key={option} value={option}>{option}</option>
               ))}
             </select>
-          </div>
-
-          <div>
-            <label htmlFor="annualPropertyTaxEst" className="block text-sm font-medium text-gray-700 mb-1">
-              Annual Property Tax Est. ($)
-            </label>
-            <input
-              type="number"
-              name="annualPropertyTaxEst"
-              id="annualPropertyTaxEst"
-              value={formData.annualPropertyTaxEst}
-              onChange={handleChange}
-              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              placeholder="0"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="annualHomeInsuranceEst" className="block text-sm font-medium text-gray-700 mb-1">
-              Annual Home Insurance Est. ($)
-            </label>
-            <input
-              type="number"
-              name="annualHomeInsuranceEst"
-              id="annualHomeInsuranceEst"
-              value={formData.annualHomeInsuranceEst}
-              onChange={handleChange}
-              className="border border-gray-300 rounded p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-              placeholder="0"
-            />
           </div>
         </>
       )}
