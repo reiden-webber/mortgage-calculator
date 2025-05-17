@@ -6,19 +6,23 @@ export interface MortgageFormInputs {
   // Purchase specific inputs
   purchasePrice: string;
   downPaymentPercentage: string; // e.g., "20", "10", "5", "3.5"
-  propertyTaxPerMonth: string; // Estimated monthly property tax for purchase
-  homeownersInsurancePerMonth: string; // Estimated monthly homeowners insurance for purchase
 
   // Refinance specific inputs
   loanBalance: string;
   estimatedPropertyValue: string;
-  annualPropertyTaxEst: string; // Estimated annual property tax for refinance
-  annualHomeInsuranceEst: string; // Estimated annual home insurance for refinance
 
   // Common inputs
   interestRate: string; // Annual interest rate
   county: string;
   hoaDues: string; // Monthly HOA Dues
+}
+
+// Define a new type for the data passed to BreakdownDisplay
+export interface FormCalculatedData {
+  principalAndInterest: number;
+  propertyTaxes: number;
+  homeInsurance: number;
+  hoaFees: number;
 }
 
 export interface MortgageBreakdown {
