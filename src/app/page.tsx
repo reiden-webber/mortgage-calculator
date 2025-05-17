@@ -20,7 +20,7 @@ const initialFormValues: MortgageFormInputs = {
   estimatedPropertyValue: '550000',
 };
 
-const countyRates = new Map<string, number>([
+const countyTaxPercentages = new Map<string, number>([
     ["Los Angeles County", 1.25],
     ["Orange County", 1.2],
     ["San Bernadino County", 1.1],
@@ -35,7 +35,7 @@ export default function Home() {
 
   const handleFormUpdate = (values: MortgageFormInputs) => {
     const annualInterestRate = parseFloat(values.interestRate) || 0;
-    const hoaFeesMonthly = parseFloat(values.hoaDues) || 0;
+    const hoaFees = parseFloat(values.hoaDues) || 0;
     const loanTermYears = 30;
     const numberOfPayments = loanTermYears * 12;
 
@@ -70,7 +70,7 @@ export default function Home() {
       Math.max(0, isFinite(calculatedPrincipalAndInterest) ? 
       calculatedPrincipalAndInterest : 0);
 
-    const propertyTaxRate = countyRates.get(values.county) || 1.25;
+    const propertyTaxRate = countyTaxPercentages.get(values.county) || 1.25;
     const propertyTaxMonthly = (parseFloat(values.purchasePrice) || 0) * (propertyTaxRate / 100) / 12;
     const homeInsuranceMonthly = (parseFloat(values.purchasePrice) || 0) * (0.002 / 12); //Example rate
 
@@ -78,7 +78,7 @@ export default function Home() {
       principalAndInterest: calculatedPrincipalAndInterest,
       propertyTaxes: propertyTaxMonthly,
       homeInsurance: homeInsuranceMonthly,
-      hoaFees: hoaFeesMonthly, 
+      hoaFees: hoaFees,
     };
     setBreakdownData(newCalculationResult);
   };

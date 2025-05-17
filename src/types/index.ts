@@ -5,7 +5,7 @@ export interface MortgageFormInputs {
 
   // Purchase specific inputs
   purchasePrice: string;
-  downPaymentPercentage: string; // e.g., "20", "10", "5", "3.5"
+  downPaymentPercentage: string; // e.g., "20%", "10%", "5%", "3.5%"
 
   // Refinance specific inputs
   loanBalance: string;
@@ -25,18 +25,18 @@ export interface FormCalculatedData {
   hoaFees: number;
 }
 
-export interface MortgageBreakdown {
-  totalMonthlyPayment: number;
-  breakdown: {
-    principalAndInterest: number;
-    propertyTaxes: number;
-    homeInsurance: number;
-    // Optional: include others if needed for a more detailed internal model
-    mortgageInsurance?: number;
-    hoaFees?: number; // Add HOA to the breakdown model
-    pmi?: number;
-  };
-}
+// export interface MortgageBreakdown {
+//   totalMonthlyPayment: number;
+//   breakdown: {
+//     principalAndInterest: number;
+//     propertyTaxes: number;
+//     homeInsurance: number;
+//     // Optional: include others if needed for a more detailed internal model
+//     mortgageInsurance?: number;
+//     hoaFees?: number; // Add HOA to the breakdown model
+//     pmi?: number;
+//   };
+// }
 
 export interface PieChartData {
   labels: string[];
