@@ -1,4 +1,4 @@
-"use client"; // Required for useState and event handlers
+"use client";
 
 import React, { useState } from 'react';
 import MortgageForm from '@/components/MortgageForm';
@@ -7,31 +7,21 @@ import { MortgageFormInputs, MortgageBreakdown } from '@/types';
 
 const initialFormValues: MortgageFormInputs = {
   transactionType: 'Purchase',
-  purchasePrice: '500000', // Example value
+
+  // Fields for purchase
+  purchasePrice: '',
   downPaymentPercentage: '20%',
-  interestRate: '6.875', // Example interest rate
+  interestRate: '6.875',  // TODO: User wants to conviently change the interestRate
   county: 'Los Angeles County',
-  hoaDues: '0', // Example HOA dues
-  propertyTaxPerMonth: '520', // Example property tax (approx 1.25% of 500k / 12)
-  homeownersInsurancePerMonth: '100', // Example home insurance
+  hoaDues: '',
+  propertyTaxPerMonth: '',
+  homeownersInsurancePerMonth: '',
 
   // Fields for refinance
-  loanBalance: '300000', // Example value
-  estimatedPropertyValue: '550000', // Example value
-  annualPropertyTaxEst: '6250', // Example value (approx 1.25% of 500k)
-  annualHomeInsuranceEst: '1200', // Example value
-
-  // The following fields might be part of a broader MortgageFormInputs type definition.
-  // Provide empty strings or default values if they are required by the type,
-  // even if not directly used by the 'Purchase' form's primary calculation path.
-  mortgageInsurance: '', 
-  principalInterest: '', // This will be calculated, not taken from form input directly for P&I calculation
-  propertyTaxes: '',     // Corresponds to propertyTaxPerMonth for input
-  homeInsurance: '',     // Corresponds to homeownersInsurancePerMonth for input
-  creditScore: '',
-  pmiPerMonth: '',
-  propertyTaxAmount: '', // Potentially redundant with propertyTaxPerMonth
-  homeInsuranceAmount: '', // Potentially redundant with homeownersInsurancePerMonth
+  loanBalance: '300000',
+  estimatedPropertyValue: '550000',
+  annualPropertyTaxEst: '6250',
+  annualHomeInsuranceEst: '1200',
 };
 
 export default function Home() {
@@ -68,7 +58,7 @@ export default function Home() {
       if (annualInterestRate === 0) {
         calculatedPrincipalAndInterest = loanAmount / numberOfPayments;
       } else {
-        // P * (r(1+r)^n) / ((1+r)^n - 1)
+        // PrincipalAndInterest = P * (r(1+r)^n) / ((1+r)^n - 1)
         // where P = principal, r = monthly interest rate, n = number of payments
         const monthlyInterestRate = annualInterestRate / 100 / 12;
         const factor = Math.pow(1 + monthlyInterestRate, numberOfPayments);
@@ -78,7 +68,9 @@ export default function Home() {
     }
     
     // Ensure calculated P&I is a non-negative finite number
-    calculatedPrincipalAndInterest = Math.max(0, isFinite(calculatedPrincipalAndInterest) ? calculatedPrincipalAndInterest : 0);
+    calculatedPrincipalAndInterest = 
+      Math.max(0, isFinite(calculatedPrincipalAndInterest) ? 
+      calculatedPrincipalAndInterest : 0);
 
     // Total monthly payment for the pie chart (P&I + Tax + Insurance + HOA)
     let totalMonthlyPaymentForPieChart = 
@@ -97,7 +89,6 @@ export default function Home() {
         propertyTaxes: propertyTaxesMonthly,
         homeInsurance: homeInsuranceMonthly,
         hoaFees: hoaFeesMonthly, 
-        // mortgageInsurance and pmi can be added here if calculated/provided
       },
     };
     setBreakdownData(newBreakdown);

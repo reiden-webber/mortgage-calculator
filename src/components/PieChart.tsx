@@ -21,7 +21,6 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
           '#3B82F6', // Blue
           '#10B981', // Green
           '#8B5CF6', // Purple
-          // Adding more colors in case labels/values expand
           '#F59E0B', // Amber
           '#EF4444', // Red
           '#6366F1', // Indigo
@@ -45,7 +44,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false, // Legend will be handled customly in BreakdownDisplay
+        display: false,
       },
       tooltip: {
         enabled: true, // Enable tooltips on hover
