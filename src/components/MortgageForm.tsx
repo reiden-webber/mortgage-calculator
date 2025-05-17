@@ -32,11 +32,11 @@ const MortgageForm: React.FC<MortgageFormProps> = ({ initialValues, onSubmit }) 
   });
 
   useEffect(() => {
-    setFormData(prevData => ({
+    setFormData({
       ...defaultInitialValues,
       ...initialValues,
       transactionType: initialValues.transactionType || defaultInitialValues.transactionType,
-    }));
+    });
   }, [initialValues]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
